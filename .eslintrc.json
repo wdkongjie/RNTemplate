@@ -1,0 +1,64 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "parser": "babel-eslint",
+    "extends": [
+        "standard",
+        "standard-react",
+        "plugin:flowtype/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": ["react", "flowtype"],
+    "rules": {
+        "no-tabs": "error",
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "space-before-function-paren": ["off", "ignore"],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "react/jsx-curly-spacing": ["error", "always"],
+        "react/prop-types": [
+            "error",
+            {
+                "ignore": ["style", "children"],
+                "skipUndeclared": true
+            }
+        ],
+        "flowtype/boolean-style": ["error", "boolean"],
+        "flowtype/define-flow-type": "warn",
+        "flowtype/delimiter-dangle": ["error", "never"],
+        "flowtype/generic-spacing": ["error", "never"],
+        "flowtype/no-primitive-constructor-types": "error",
+        "flowtype/no-types-missing-file-annotation": "error",
+        "flowtype/no-weak-types": "off",
+        "flowtype/object-type-delimiter": ["error", "comma"],
+        "flowtype/require-parameter-type": "error",
+        "flowtype/require-return-type": [
+            "error",
+            "always",
+            {
+                "annotateUndefined": "never",
+                "excludeArrowFunctions": true
+            }
+        ],
+        "flowtype/require-valid-file-annotation": "error",
+        "flowtype/semi": ["error", "always"],
+        "flowtype/space-after-type-colon": ["error", "always"],
+        "flowtype/space-before-generic-bracket": ["error", "never"],
+        "flowtype/space-before-type-colon": ["error", "never"],
+        "flowtype/type-id-match": ["error", "^([A-Z][a-z0-9]+)+Type$"],
+        "flowtype/union-intersection-spacing": ["error", "always"],
+        "flowtype/use-flow-type": "warn",
+        "flowtype/valid-syntax": "warn"
+    }
+}
