@@ -22,13 +22,13 @@ const { width: screenWidth } = Dimensions.get("window");
  */
 export default class CenterToolbar extends Component {
     props: {
-        pTitle: ?string,
-        pTitleColor: ?ColorPropType,
-        pSubTitle: ?string,
-        pSubTitleColor: ?ColorPropType,
-        pNavEnable: boolean,
-        pNavIcon: ?Image.propTypes.source,
-        pOnBackHandler: ?OnBackHandlerType
+        pTitle?: string,
+        pTitleColor?: ColorPropType,
+        pSubTitle?: string,
+        pSubTitleColor?: ColorPropType,
+        pNavEnable?: boolean,
+        pNavIcon?: Image.propTypes.source,
+        pOnBackHandler?: ?OnBackHandlerType
     };
 
     static defaultProps = {
@@ -46,7 +46,7 @@ export default class CenterToolbar extends Component {
             }
             return false;
         };
-        this.layout = false;
+        this.first = true;
         this._renderTitleElement = this._renderTitleElement.bind(this);
         this._onLayout = this._onLayout.bind(this);
         this.state = { offset: 0, titleWidth: 0 };
@@ -69,7 +69,7 @@ export default class CenterToolbar extends Component {
                 navIcon={ pNavEnable ? pNavIcon : null }
                 style={ style ? [StyleSheet.flatten(styles.toolbar), style] : styles.toolbar }
                 onIconClicked={ () => {
-                    if (pOnBackHandler && pOnBackHandler()) {
+                    if (!!pOnBackHandler && pOnBackHandler()) {
                         return;
                     }
                     BackHandler.exitApp();
@@ -88,32 +88,32 @@ export default class CenterToolbar extends Component {
         const subTitleStyle = [StyleSheet.flatten(styles.subTitle), {marginLeft: titleWidth > 0 ? margin : 0}];
 
         return (
-            <View style={ styles.center } collapsable={ false } opacity={ this.layout ? 1 : 0 }>
+            <View style={ styles.center } collapsable={ !pSubTitle } opacity={ this.first ? 0 : 1 }>
                 <Text ref='title' style={ pTitleColor ? [titleStyle, {color: pTitleColor}] : titleStyle }
                     onLayout={ this._onLayout }
                 >
                     {pTitle}
                 </Text>
                 {
-                    pSubTitle ? (
+                    pSubTitle && (
                         <Text style={ pSubTitleColor ? [subTitleStyle, {color: pSubTitleColor}] : subTitleStyle }
                         >
                             {pSubTitle}
                         </Text>
-                    ) : null
+                    )
                 }
             </View>
         );
     }
 
     _onLayout({ nativeEvent: { layout: {x, y, width, height} } }: any) {
+        if (!this.first) {
+            return;
+        }
+
         this.refs.title.measure((x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
-            if (!this.layout) {
-                this.layout = true;
-                this.setState({offset: pageX, titleWidth: width});
-            } else {
-                this.layout = false;
-            }
+            this.first = false;
+            this.setState({offset: pageX, titleWidth: width});
         });
     }
 }
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
     center: {
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "flex-start"
+        alignItems: "flex-start",
+        height: Dimen.ActionBarHeight // 解决标题居中问题
     },
     title: {
         color: Color.TextColorPrimary,

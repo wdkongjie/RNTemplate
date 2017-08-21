@@ -28,7 +28,7 @@
         "react/jsx-indent-props": ["error", 4],
         "react/jsx-curly-spacing": ["error", "always"],
         "react/prop-types": [
-            "error",
+            "off",
             {
                 "ignore": ["style", "children"],
                 "skipUndeclared": true

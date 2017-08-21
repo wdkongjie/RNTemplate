@@ -19,9 +19,9 @@ type OnBackHandlerType = () => boolean;
  */
 export default class StandardToolbar extends Component {
     props: {
-        pNavEnable: boolean,
-        pNavIcon: ?Image.propTypes.source,
-        pOnBackHandler: ?OnBackHandlerType
+        pNavEnable?: boolean,
+        pNavIcon?: Image.propTypes.source,
+        pOnBackHandler?: ?OnBackHandlerType
     };
 
     static defaultProps = {
@@ -59,7 +59,7 @@ export default class StandardToolbar extends Component {
                 navIcon={ pNavEnable ? pNavIcon : null }
                 style={ style ? [StyleSheet.flatten(styles.toolbar), style] : styles.toolbar }
                 onIconClicked={ () => {
-                    if (pOnBackHandler && pOnBackHandler()) {
+                    if (!!pOnBackHandler && pOnBackHandler()) {
                         return;
                     }
                     BackHandler.exitApp();
