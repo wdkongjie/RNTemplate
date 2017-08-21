@@ -51,13 +51,13 @@ export default class NormalListView extends Component {
         if (ItemSeparatorComponent) {
             enableSeparator = false;
         }
-        var props = Object.assign({}, this.props, {onRefresh: null});
+        var props = Object.assign({}, this.props, {onRefresh: null, ListFooterComponent: null});
         if (enableSeparator) {
             props.ItemSeparatorComponent = this._defaultSeparatorRender;
         }
         return (
             <FlatList { ...props }
-                ListFooterComponent={ pOnLoadMore ? this._defaultFooterRender : null }
+                ListFooterComponent={ pOnLoadMore ? this._defaultFooterRender : this.props.ListFooterComponent }
                 refreshControl={
                     <RefreshControl
                         enable={ !!this.props.onRefresh }
