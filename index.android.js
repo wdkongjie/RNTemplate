@@ -1,64 +1,28 @@
 // @flow
 
+"use strict";
+
 import React, { Component } from "react";
-import {
-    AppRegistry,
-    StyleSheet,
-    View,
-    Text
-} from "react-native";
+import { AppRegistry, View, Text } from "react-native";
 
 import CenterToolbar from "./js/widget/CenterToolbar";
-import NormalListView from "./js/widget/NormalListView";
+import GridListView from "./js/widget/GridListView";
 
-export default class ListViewDemo extends Component {
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            refreshing: false,
-            loading: "idle"
-        };
-    }
-
+export default class GridListDemo extends Component {
     render(): React.Element<any> {
-        console.log(this.props);
         return (
-            <View style={ styles.container }>
+            <View style={ { flex: 1 } }>
                 <CenterToolbar
-                    pTitle={ "FlatList" }
-                    pTitleColor={ "#FFFFFF" }
+                    pTitle={ "GridList" }
                 />
-
-                <NormalListView
+                <GridListView
                     pEnableSeparator
-                    pSeparatorSize={ 2 }
+                    pSeparatorSize={ 1 }
                     pSeparatorColor={ "#FF0000" }
+                    numColumns={ 3 }
                     data={ this._generateData() }
                     keyExtractor={ this._generateKey }
                     renderItem={ this._renderItem }
-                    onRefresh={ () => {
-                        this.setState((prevState: any, props: any) => {
-                            return Object.assign({}, prevState, {refreshing: true});
-                        });
-                        setTimeout(() => {
-                            this.setState((prevState: any, props: any) => {
-                                return Object.assign({}, prevState, {refreshing: false});
-                            });
-                        }, 3000);
-                    } }
-                    refreshing={ this.state.refreshing }
-                    pOnLoadMore={ () => {
-                        this.setState((prevState: any, props: any) => {
-                            return Object.assign({}, prevState, {loading: "loading"});
-                        });
-                        setTimeout(() => {
-                            this.setState((prevState: any, props: any) => {
-                                return Object.assign({}, prevState, {loading: "noMore"});
-                            });
-                        }, 3000);
-                    } }
-                    pLoading={ this.state.loading }
                 />
             </View>
         );
@@ -78,28 +42,11 @@ export default class ListViewDemo extends Component {
 
     _renderItem({item, index}: any): ?React.Element<any> {
         return (
-            <View style={ styles.item }>
-                <Text>
-                    { `index(${index}):` }
-                </Text>
-                <Text>
-                    { item }
-                </Text>
-            </View>
+            <Text>
+                {item}
+            </Text>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F5FCFF"
-    },
-    item: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 45
-    }
-});
-
-AppRegistry.registerComponent("RNTemplate", () => ListViewDemo);
+AppRegistry.registerComponent("RNTemplate", () => GridListDemo);
