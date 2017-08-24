@@ -11,6 +11,13 @@ import { Color, Dimen } from "../res/values/Config";
 
 const { width: screenWidth } = Dimensions.get("window");
 
+/**
+ * grid list效果封装
+ * 
+ * @export
+ * @class GridListView
+ * @extends {Component}
+ */
 export default class GridListView extends Component {
     props: {
         pEnableSeparator?: boolean,

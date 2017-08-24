@@ -6,7 +6,9 @@ var Color = {
     ColorPrimary: "#2E90F2",
     TextColorPrimary: "#000000DE",
     TextColorSecond: "#0000008A",
-    ListSeparatorColor: "#D0D0D0"
+    ListSeparatorColor: "#D0D0D0",
+
+    DialogLikeColor: "#00000060"
 };
 
 var Dimen = {
@@ -18,7 +20,9 @@ var Dimen = {
 
 var InfoString = {
     LoadMore: "加载更多",
-    NoMoreLoad: "无更多加载"
+    NoMoreLoad: "无更多加载",
+    Ok: "确定",
+    Cancel: "取消"
 };
 
 module.exports = {

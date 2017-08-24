@@ -107,7 +107,7 @@ export default class NormalListView extends Component {
         const { pLoading, pOnLoadMore } = this.props;
         const enable = pLoading === "idle";
         return (
-            <NativeButtonWrapper pOnPress={ enable ? pOnLoadMore : null }>
+            <NativeButtonWrapper onPress={ enable ? pOnLoadMore : null }>
                 <View style={ styles.more } >
                     <Text style={ styles.moreText }>
                         { enable ? InfoString.LoadMore : InfoString.NoMoreLoad }

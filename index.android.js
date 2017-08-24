@@ -3,50 +3,68 @@
 "use strict";
 
 import React, { Component } from "react";
-import { AppRegistry, View, Text } from "react-native";
+import { AppRegistry, StyleSheet, View, Button, Text, ToastAndroid } from "react-native";
 
-import CenterToolbar from "./js/widget/CenterToolbar";
-import GridListView from "./js/widget/GridListView";
+import CustomModal from "./js/widget/CustomModal";
 
-export default class GridListDemo extends Component {
+export default class ModalDemo extends Component {
     render(): React.Element<any> {
         return (
-            <View style={ { flex: 1 } }>
-                <CenterToolbar
-                    pTitle={ "GridList" }
-                />
-                <GridListView
-                    pEnableSeparator
-                    pSeparatorSize={ 1 }
-                    pSeparatorColor={ "#FF0000" }
-                    numColumns={ 3 }
-                    data={ this._generateData() }
-                    keyExtractor={ this._generateKey }
-                    renderItem={ this._renderItem }
+            <View style={ styles.container } >
+                <CustomModal
+                    ref={ (self: CustomModal) => {
+                        this.modal = self;
+                    } }
+                    pTitle={ "Title" }
+                    pOnOk={ () => {
+                        ToastAndroid.show("ok clicked", ToastAndroid.SHORT);
+                        if (this.modal) {
+                            this.modal.dismiss();
+                        }
+                    } }
+                    pOnCancel={ () => {
+                        ToastAndroid.show("cancel clicked", ToastAndroid.SHORT);
+                        if (this.modal) {
+                            this.modal.dismiss();
+                        }
+                    } }
+                >
+                    <Text>
+                        测试
+                    </Text>
+                </CustomModal>
+
+                <Button
+                    title={ "show" }
+                    onPress={ () => {
+                        if (this.modal) {
+                            this.modal.show();
+                        }
+                    } }
                 />
             </View>
         );
     }
-
-    _generateData(): Array<any> {
-        var data = [];
-        for (var i = 0; i < 20; i++) {
-            data.push("数据" + i);
-        }
-        return data;
-    }
-
-    _generateKey(item: any, index: number): string {
-        return index.toString();
-    }
-
-    _renderItem({item, index}: any): ?React.Element<any> {
-        return (
-            <Text>
-                {item}
-            </Text>
-        );
-    }
 }
 
-AppRegistry.registerComponent("RNTemplate", () => GridListDemo);
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    modal: {
+        flex: 1,
+        justifyContent: "center",
+        // alignItems: "center",
+        backgroundColor: "#00000060"
+    },
+    content: {
+        marginLeft: 20,
+        marginRight: 20,
+        padding: 10,
+        backgroundColor: "#FFFFFF"
+    }
+});
+
+AppRegistry.registerComponent("RNTemplate", () => ModalDemo);

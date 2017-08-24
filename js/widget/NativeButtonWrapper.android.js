@@ -13,22 +13,14 @@ import { TouchableNativeFeedback } from "react-native";
  * @extends {Component}
  */
 export default class NativeButtonWrapper extends Component {
-    props: {
-        pOnPress: () => void
-    };
-
     static defaultProps={
-        pOnPress: () => null,
         background: TouchableNativeFeedback.SelectableBackground()
     };
 
     render(): React.Element<any> {
-        const { pOnPress, background } = this.props;
-
         return (
             <TouchableNativeFeedback
-                onPress={ pOnPress }
-                background={ background }
+                { ...this.props }
             >
                 { this.props.children }
             </TouchableNativeFeedback>
