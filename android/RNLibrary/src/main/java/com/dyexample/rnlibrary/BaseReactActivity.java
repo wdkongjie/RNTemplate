@@ -1,12 +1,15 @@
 package com.dyexample.rnlibrary;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 
 import com.facebook.react.ReactInstanceManager;
@@ -15,15 +18,19 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.modules.core.PermissionAwareActivity;
+import com.facebook.react.modules.core.PermissionListener;
 import com.facebook.react.shell.MainReactPackage;
 
 import java.util.List;
 
-public abstract class BaseReactActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler {
+public abstract class BaseReactActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
     private static final int OVERLAY_PERMISSION_REQ_CODE = 0x1000;
 
     protected ReactRootView mReactRootView;
     protected ReactInstanceManager mReactInstanceManager;
+
+    private SparseArray<PermissionListener> mListeners = new SparseArray<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +91,7 @@ public abstract class BaseReactActivity extends AppCompatActivity implements Def
         if(null != mReactInstanceManager) {
             mReactInstanceManager.onHostDestroy(this);
         }
+        mListeners.clear();
     }
 
     @Override
@@ -103,6 +111,22 @@ public abstract class BaseReactActivity extends AppCompatActivity implements Def
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void requestPermissions(String[] permissions, int requestCode, PermissionListener listener) {
+        mListeners.put(requestCode, listener);
+        requestPermissions(permissions, requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionListener listener = mListeners.get(requestCode);
+        if(null != listener) {
+            listener.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            mListeners.remove(requestCode);
+        }
     }
 
     @Override

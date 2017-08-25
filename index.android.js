@@ -3,48 +3,38 @@
 "use strict";
 
 import React, { Component } from "react";
-import { AppRegistry, StyleSheet, View, Button, Text, ToastAndroid } from "react-native";
+import { AppRegistry, StyleSheet, View, PermissionsAndroid, Button, ToastAndroid } from "react-native";
 
-import CustomModal from "./js/widget/CustomModal";
-
-export default class ModalDemo extends Component {
+export default class PermissionDemo extends Component {
     render(): React.Element<any> {
         return (
-            <View style={ styles.container } >
-                <CustomModal
-                    ref={ (self: CustomModal) => {
-                        this.modal = self;
-                    } }
-                    pTitle={ "Title" }
-                    pOnOk={ () => {
-                        ToastAndroid.show("ok clicked", ToastAndroid.SHORT);
-                        if (this.modal) {
-                            this.modal.dismiss();
-                        }
-                    } }
-                    pOnCancel={ () => {
-                        ToastAndroid.show("cancel clicked", ToastAndroid.SHORT);
-                        if (this.modal) {
-                            this.modal.dismiss();
-                        }
-                    } }
-                >
-                    <Text>
-                        测试
-                    </Text>
-                </CustomModal>
-
+            <View style={ styles.container }>
                 <Button
-                    title={ "show" }
-                    onPress={ () => {
-                        if (this.modal) {
-                            this.modal.show();
-                        }
-                    } }
+                    title={ "Camera" }
+                    onPress={ this._requestCameraPermission }
                 />
             </View>
         );
     }
+
+    async _requestCameraPermission(): Promise {
+        try {
+            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: "Camera",
+                    message: "应用拍照需要相机权限以正常使用"
+                }
+            );
+
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                ToastAndroid.show("获取相机权限成功", ToastAndroid.SHORT);
+            } else {
+                ToastAndroid.show("相机权限获取被拒绝", ToastAndroid.SHORT);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
 }
 
 const styles = StyleSheet.create({
@@ -52,19 +42,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
-    },
-    modal: {
-        flex: 1,
-        justifyContent: "center",
-        // alignItems: "center",
-        backgroundColor: "#00000060"
-    },
-    content: {
-        marginLeft: 20,
-        marginRight: 20,
-        padding: 10,
-        backgroundColor: "#FFFFFF"
     }
 });
 
-AppRegistry.registerComponent("RNTemplate", () => ModalDemo);
+AppRegistry.registerComponent("RNTemplate", () => PermissionDemo);
