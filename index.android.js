@@ -3,7 +3,9 @@
 "use strict";
 
 import React, { Component } from "react";
-import { AppRegistry, StyleSheet, View, PermissionsAndroid, Button, ToastAndroid } from "react-native";
+import { AppRegistry, StyleSheet, View, Button, ToastAndroid } from "react-native";
+
+import PermissionsAndroid from "./js/utils/Extension";
 
 export default class PermissionDemo extends Component {
     render(): React.Element<any> {

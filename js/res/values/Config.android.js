@@ -22,7 +22,9 @@ var InfoString = {
     LoadMore: "加载更多",
     NoMoreLoad: "无更多加载",
     Ok: "确定",
-    Cancel: "取消"
+    Cancel: "取消",
+    PermissionsOk: "同意",
+    PermissionsCancel: "取消"
 };
 
 module.exports = {

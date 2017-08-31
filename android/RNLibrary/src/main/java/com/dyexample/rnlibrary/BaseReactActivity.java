@@ -13,47 +13,25 @@ import android.util.SparseArray;
 import android.view.KeyEvent;
 
 import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactInstanceManagerBuilder;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.ReactRootView;
-import com.facebook.react.common.LifecycleState;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
-import com.facebook.react.shell.MainReactPackage;
 
 import java.util.List;
 
 public abstract class BaseReactActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
-    private static final int OVERLAY_PERMISSION_REQ_CODE = 0x1000;
+    protected static final int OVERLAY_PERMISSION_REQ_CODE = 0x1000;
 
-    protected ReactRootView mReactRootView;
     protected ReactInstanceManager mReactInstanceManager;
 
+    private Callback mCallback;
     private SparseArray<PermissionListener> mListeners = new SparseArray<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mReactRootView = new ReactRootView(this);
-        ReactInstanceManagerBuilder builder = ReactInstanceManager.builder()
-            .setApplication(getApplication())
-            .setBundleAssetName(getBundleAssetName())
-            .setJSMainModuleName(getJSMainModuleName())
-            .setUseDeveloperSupport(isDevSupport())
-            .setInitialLifecycleState(LifecycleState.RESUMED);
-
-        builder.addPackage(new MainReactPackage());
-        List<ReactPackage> reactPackages = getReactPackages();
-        if(null != reactPackages) {
-            for (ReactPackage reactPackage :reactPackages) {
-                builder.addPackage(reactPackage);
-            }
-        }
-        mReactInstanceManager = builder.build();
-        mReactRootView.startReactApplication(mReactInstanceManager, getMainComponentName());
-        setContentView(mReactRootView);
 
         if(isDevSupport()) {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -81,6 +59,11 @@ public abstract class BaseReactActivity extends AppCompatActivity implements Def
 
         if(null != mReactInstanceManager) {
             mReactInstanceManager.onHostResume(this, this);
+        }
+
+        if(null != mCallback) {
+            mCallback.invoke();
+            mCallback = null;
         }
     }
 
@@ -121,10 +104,15 @@ public abstract class BaseReactActivity extends AppCompatActivity implements Def
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        PermissionListener listener = mListeners.get(requestCode);
+    public void onRequestPermissionsResult(final int requestCode, final @NonNull String[] permissions, final @NonNull int[] grantResults) {
+        final PermissionListener listener = mListeners.get(requestCode);
         if(null != listener) {
-            listener.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            mCallback = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    listener.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                }
+            };
             mListeners.remove(requestCode);
         }
     }
@@ -148,8 +136,6 @@ public abstract class BaseReactActivity extends AppCompatActivity implements Def
     }
 
     protected abstract boolean isDevSupport();
-    protected abstract String getBundleAssetName();
-    protected abstract String getJSMainModuleName();
     protected abstract String getMainComponentName();
 
     protected List<ReactPackage> getReactPackages() {

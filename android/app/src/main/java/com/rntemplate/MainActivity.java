@@ -1,8 +1,8 @@
 package com.rntemplate;
 
-import com.dyexample.rnlibrary.BaseReactActivity;
+import com.dyexample.rnlibrary.BaseCustomReactActivity;
 
-public class MainActivity extends BaseReactActivity {
+public class MainActivity extends BaseCustomReactActivity {
     @Override
     protected boolean isDevSupport() {
         return BuildConfig.DEBUG;
